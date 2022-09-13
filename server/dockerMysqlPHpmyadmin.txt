@@ -1,0 +1,8 @@
+Run Docker Mysql and Phpmyadmin
+
+#mysql
+docker run --name mysql-server -p 3306:3306 -v c:/mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1234 -d mysql
+
+
+#phpmyadmin
+docker run --name phpmyadmin-server -d --link mysql-server:db -p 8081:80 phpmyadmin

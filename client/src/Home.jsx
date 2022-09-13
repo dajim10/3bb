@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./pages/Navbar";
 import Main from "./pages/Main";
-import Search from './pages/Search'
-import './App.css'
+import Search from "./pages/Search";
+import Test from "./pages/Test";
+import "./App.css";
 // import FunctionColor from './FunctionColor'
 
 // import './App.css'
@@ -15,31 +16,29 @@ function Home() {
     name: "",
     home: "",
   });
-  const [search,setSearch] = useState('')
+  const [search, setSearch] = useState("");
 
-  const [searchParam,setSearchParam] = useState();
+  const [searchParam, setSearchParam] = useState();
 
- 
   const handleChange = (e) => {
     const input = e.target.value;
-    if (input.length>0) {
+    if (input.length > 0) {
       // console.log(input);
-      axios.get(`http://172.16.163.89:3000/search/${input}`)
-      .then(response => setData(response.data))
-      .catch(err=> console.error(err))
-    }else {
-      axios.get('http://172.16.163.89:3000/getall')
-      .then(response => setData(response.data))
-      .catch(err=> console.error(err))
+      axios
+        .get(`http://localhost:3000/search/${input}`)
+        .then((response) => setData(response.data))
+        .catch((err) => console.error(err));
+    } else {
+      axios
+        .get("http://localhost:3000/getall")
+        .then((response) => setData(response.data))
+        .catch((err) => console.error(err));
     }
-    
-
-  }
-
-  const FetchQuery = (e) => {
-    
   };
 
+  const FetchQuery = (e) => {};
+
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,11 +47,7 @@ function Home() {
       // comparing category for displaying data
     });
     setData(newData);
-    
   };
-
-
- 
 
   const FunctionColor = (sdg, index) => {
     const number = sdg;
@@ -279,7 +274,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://172.16.163.89:3000/getAll", {
+      .get("http://localhost:3000/getAll", {
         headers: {
           "Access-Control-Allow-Origin": true,
         },
@@ -291,6 +286,7 @@ function Home() {
   return (
     <>
       {/* <Navbar /> */}
+      {/* <Test /> */}
       <div className="container text-center mb-3 p-2">
         <form className="d-flex" role="search" onSubmit={handleSubmit}>
           <input
@@ -301,7 +297,7 @@ function Home() {
             value={searchParam}
             name="search"
             // onChange={(e) => setSearch(e.target.value)}
-            onChange={e=>handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
           {/* <button type="submit" style={{ border: "none", background: "white" }}>
             {}
@@ -318,7 +314,6 @@ function Home() {
         <div className="row">
           {data.map((item, idx) => (
             <div className="col-lg-3 col-md-6 col-sm-12" key={idx}>
-              
               <div
                 className="card shadow-lg"
                 // style={{ height: "350px" }}
@@ -333,14 +328,17 @@ function Home() {
                       borderTopRightRadius: "5px",
                     }}
                   />
+                  <div dangerouslySetInnerHTML={{ __html: `<img src="${item.image}"/>`  }} />
+                  <p>{item.image}</p>
                 </div>
-                <div className="card-body text-truncate">
+                <div className="card-body">
                   <small>{item.content_name}</small>
                 </div>
 
                 <div
                   key={idx}
-                  style={{ position: "absolute", bottom: "20", right: "0" }}
+
+                  // style={{ position: "absolute", bottom: "20", right: "0" }}
                 >
                   {/* <div className="card-footer"> */}
 

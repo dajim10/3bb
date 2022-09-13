@@ -71,6 +71,11 @@ const Navbar = () => {
                 <i className="fa-solid fa-user text-danger"></i> Upload Content
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/test" className="nav-link hover-underline-animation" >
+                <i className="fa-solid fa-user text-danger"></i> ทดสอบ
+              </Link>
+            </li>
           </ul>
           {/* <Search /> */}
         </div>
