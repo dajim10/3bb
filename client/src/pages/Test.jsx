@@ -45,7 +45,7 @@ const Test = () => {
             type="file"
             className="form-control"
             name="image"
-            // value={filename}
+            // value={e.target.value}
             required
             onChange={e=>setImage(e.target.value)}
           />
