@@ -36,9 +36,9 @@ function Home() {
     }
   };
 
-  const FetchQuery = (e) => {};
+  const FetchQuery = (e) => { };
 
-  
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -316,7 +316,7 @@ function Home() {
             <div className="col-lg-3 col-md-6 col-sm-12" key={idx}>
               <div
                 className="card shadow-lg"
-                // style={{ height: "350px" }}
+              // style={{ height: "350px" }}
               >
                 <div className="inner">
                   <img
@@ -328,8 +328,8 @@ function Home() {
                       borderTopRightRadius: "5px",
                     }}
                   />
-                  <div dangerouslySetInnerHTML={{ __html: `<img src="${item.image}"/>`  }} />
-                  <p>{item.image}</p>
+                  {/* <div dangerouslySetInnerHTML={{ __html: `<img src="${item.image}"/>`  }} /> */}
+                  {/* <p>{item.image}</p> */}
                 </div>
                 <div className="card-body">
                   <small>{item.content_name}</small>
@@ -338,7 +338,7 @@ function Home() {
                 <div
                   key={idx}
 
-                  // style={{ position: "absolute", bottom: "20", right: "0" }}
+                // style={{ position: "absolute", bottom: "20", right: "0" }}
                 >
                   {/* <div className="card-footer"> */}
 

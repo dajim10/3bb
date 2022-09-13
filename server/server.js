@@ -9,12 +9,12 @@ const mysql = require('mysql2');
 app.use(bodyParser.json());
 require('dotenv').config();
 app.use(cors());
-app.use('./public',express.static('./public'))
+app.use('./public', express.static('./public'))
 // app.use(fileUpload());
 
 
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.json());
 
 const con = mysql.createConnection({
@@ -50,7 +50,7 @@ var storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         // cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))1
-        cb(null,Date.now()+ "--" + file.originalname)
+        cb(null, Date.now() + "--" + file.originalname)
     }
     // filename: function (req, file, cb) {
     //     cb(null, Date.now() + ".png")
@@ -63,84 +63,75 @@ var storage = multer.diskStorage({
     // }
 });
 
-const upload = multer({ 
-    storage: storage ,
-    limits : { fileSize : '1000000'}   
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: '1000000' }
 });
 
 
-app.post('/upload',upload.single('image'), (req, res)=>
-{
-    res.send(req.file)
+// app.post('/upload', upload.single('image'), (req, res) => {
+//     res.send(file)
+// })
+
+/********* ปิดชั่วคราวเพื่อทดสอบ 13-09-2020  */
+app.post('/upload', upload.single('file'), (req, res) => {
+
+    console.log(req.params.file)
+
+
+    const content_name = req.body.content_name;
+    const content_detail = req.body.content_detail;
+    const sdgID = req.body.sdg_id;
+    const image = req.body.image;
+    const file = req.file
+    console.log(req)
+    console.log(content_name, content_detail, sdgID, file)
+    console.log(req.file)
     if (!req.file) {
-        console.log('No file to upload')
-    }else {
-        console.log(req.file.path)
-        console.log(req.body.content_name)
-        console.log(req.body.content_detail)
-        console.log('Single File upload success')
+        console.log("No file Upload");
+    } else {
+        console.log(req.file.filename);
+        var imgsrc = "http://localhost:3000/public" + req.file.filename
+
+
+        // test new upload and insert db
+
+
+
+        const sqlInsert = "INSERT INTO content (content_name,content_detail,image) VALUES (?, ?, ?)";
+        con.query(sqlInsert, [content_name, content_detail, imgsrc], (err, result) => {
+            if (err) {
+                throw err;
+            }
+            else {
+                // console.log(result.insertId);
+                const ContentID = result.insertId;
+                console.log(sdgID)
+                sdgID.sort(function (a, b) { return a - b }).forEach(function (number) {
+
+
+                    con.query("INSERT INTO content_sdg(content_id, sdg_number) VALUES (?,?) ",
+                        [ContentID, number], (err, result) => {
+                            if (err) throw err;
+                        }
+                    )
+                })
+
+
+                res.send(result)
+            }
+
+        }
+
+        );
+
+        // 
+
+
+
 
     }
 })
-
-/********* ปิดชั่วคราวเพื่อทดสอบ 13-09-2020  */
-// app.post('/upload', upload.single('file'), (req, res) => {
-
-//     console.log(req.params.file)
-    
-
-//     const content_name = req.body.content_name;
-//     const content_detail = req.body.content_detail;
-//     const sdgID = req.body.sdg_number;
-//     const image = req.body.image;
-//     const file = req.file
-//     console.log(req)
-//     console.log(content_name, content_detail, sdgID, file)
-//     console.log(req.file)
-//     if (!req.file) {
-//         console.log("No file Upload");
-//     }else {
-//         console.log(req.file.filename);
-//         var imgsrc= "http://localhost:3000/public"+ req.file.filename
-        
-
-//         // test new upload and insert db
-
-
-        
-//         const sqlInsert = "INSERT INTO content (content_name,content_detail,image) VALUES (?, ?, ?)";
-//         con.query(sqlInsert, [content_name, content_detail, imgsrc], (err, result) => {
-//             if (err) {
-//                 throw err;
-//             }
-//             else {
-//                 // console.log(result.insertId);
-//                 const ContentID = result.insertId;
-
-//                 sdgID.sort(function (a, b) { return a - b }).forEach(function (number) {
-
-//                     con.query("INSERT INTO content_sdg(content_id, sdg_number) VALUES (?,?) ",
-//                         [ContentID, number], (err, result) => {
-//                             if (err) throw err;
-//                         }
-//                     )
-//                 })
-               
-
-//                 res.send(result)
-//             }
-
-//         }
-
-//         );
-
-//         // 
-
-
-
-
-//     }
-// })
 
 
 // app.post('/upload',(req,res) => {
@@ -162,12 +153,7 @@ app.post('/upload',upload.single('image'), (req, res)=>
 
 
 app.post("/public", (req, res) => {
-    // console.log('posting Image to Server');
-    // console.log(req.files);
 
-    // console.log(req.files[0].path)
-    // const mainImage = req.files[0].path
-    // con.query(`INSERT INTO content()`)
     if (req.files) {
         res.json(req.files[0]);
     }
@@ -236,11 +222,11 @@ app.post('/insert', (req, res) => {
     const content_name = req.body.content_name;
     const content_detail = req.body.content_detail;
 
-    const sdgID = req.body.sdg_number;
+    const sdgID = req.body.sdg_id;
 
     // const image = 'http://localhost:3000/public/'+req.body.image;
     const image = req.body.image;
-    
+
 
 
 
@@ -255,7 +241,8 @@ app.post('/insert', (req, res) => {
             // console.log(result.insertId);
             const ContentID = result.insertId;
 
-            sdgID.sort(function (a, b) { return a - b }).forEach(function (number) {
+            // sdgID.sort(function (a, b) { return a - b }).forEach(function (number) {
+            sdgID.forEach(function (number) {
 
                 con.query("INSERT INTO content_sdg(content_id, sdg_number) VALUES (?,?) ",
                     [ContentID, number], (err, result) => {
