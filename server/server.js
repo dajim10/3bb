@@ -63,9 +63,7 @@ const upload = multer({
   limits: { fileSize: "1000000" },
 });
 
-app.post("/test", (req, res,body) => {
-  
-});
+app.post("/test", (req, res, body) => {});
 
 // app.post('/upload', upload.single('image'), (req, res) => {
 //     res.send(file)
@@ -73,16 +71,14 @@ app.post("/test", (req, res,body) => {
 
 /********* ปิดชั่วคราวเพื่อทดสอบ 13-09-2020  */
 app.post("/upload", upload.array("file"), (req, res) => {
-  console.log(req.params.file);
-
+  console.log(req.body);
   const content_name = req.body.content_name;
   const content_detail = req.body.content_detail;
   const sdgID = req.body.sdg_id;
-  const image = req.body.image;
   const file = req.file;
 
-  console.log(req);
-  console.log(content_name, content_detail, sdgID, file);
+  //   console.log(req);
+  //   console.log(content_name, content_detail, sdgID, file);
   console.log(req.file);
   if (!req.file) {
     console.log("No file Upload");
