@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const mysql = require("mysql2");
+const multiparty = require("multiparty");
+
 app.use(bodyParser.json());
 require("dotenv").config();
 app.use(cors());
@@ -63,7 +65,16 @@ const upload = multer({
   limits: { fileSize: "1000000" },
 });
 
-app.post("/test", (req, res, body) => {});
+app.post("/addimage", (req, res, body) => {
+  let form = new multiparty.Form({ uploadDir: IMAGE_UPLOAD_DIR });
+
+  form.parse(req, function (err, fields, files) {
+    if (err) return res.send({ error: err.message });
+
+    console.log(`fields = ${JSON.stringify(fields, numm, 2)}`);
+    console.log(`files = ${JSONG.stringify(files, null, 2)}`);
+  });
+});
 
 // app.post('/upload', upload.single('image'), (req, res) => {
 //     res.send(file)

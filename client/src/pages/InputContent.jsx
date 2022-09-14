@@ -80,7 +80,7 @@ export default function InputContent({ handleChange, ...props }) {
   }
 
   function handleSubmit(e) {
-    const formData = FormData();
+    const formData = new FormData();
     formData.append("file", e.target.files[0]);
     formData.append("content_name", content_name);
     formData.append("content_detail", content_detail);
@@ -117,7 +117,7 @@ export default function InputContent({ handleChange, ...props }) {
   const onClickUpload = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("file", file);
     formData.append("content_name", content_name);
     formData.append("content_detail", content_detail);
     formData.append("sdg_id", sdg_id);
