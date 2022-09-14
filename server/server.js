@@ -63,12 +63,16 @@ const upload = multer({
   limits: { fileSize: "1000000" },
 });
 
+app.post("/test", (req, res,body) => {
+  
+});
+
 // app.post('/upload', upload.single('image'), (req, res) => {
 //     res.send(file)
 // })
 
 /********* ปิดชั่วคราวเพื่อทดสอบ 13-09-2020  */
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("/upload", upload.array("file"), (req, res) => {
   console.log(req.params.file);
 
   const content_name = req.body.content_name;
@@ -76,6 +80,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
   const sdgID = req.body.sdg_id;
   const image = req.body.image;
   const file = req.file;
+
   console.log(req);
   console.log(content_name, content_detail, sdgID, file);
   console.log(req.file);
@@ -117,26 +122,23 @@ app.post("/upload", upload.single("file"), (req, res) => {
         }
       }
     );
-
-    //
   }
 });
 
-// app.post('/upload',(req,res) => {
-
-//     if (req.files === null) {
-//         return res.status(400).json({msg : 'No files were uploaded'});
+// app.post("/upload", (req, res) => {
+//   if (req.files === null) {
+//     return res.status(400).json({ msg: "No files were uploaded" });
+//   }
+//   const file = req.files.file;
+//   // console.log(file);
+//   file.mv(`${__dirname}/public/${file.name}`, (err) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).json({ msg: "server error" });
 //     }
-//     const file = req.files.file;
-//     // console.log(file);
-//     file.mv(`${__dirname}/public/${file.name}`,err=>{
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).json({msg :'server error'});
-//         }
-//         res.json({fileName: file.name,filePath : `${file.name}`})
-//     })
-// })
+//     res.json({ fileName: file.name, filePath: `${file.name}` });
+//   });
+// });
 
 app.post("/public", (req, res) => {
   if (req.files) {

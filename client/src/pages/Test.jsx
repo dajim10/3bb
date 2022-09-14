@@ -1,83 +1,79 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
+
 const Test = () => {
-  const [content_name, setContent_name] = useState("");
-  const [file, setFile] = useState("");
-  const [filename, setFilename] = useState("");
-  const [uploadedFile, setUploadedFile] = useState({});
+  const [state, setState] = useState({
+    content_name: "",
+    content_detail: "",
+    image: "",
+  });
 
-  const [content_detail, setContent_detail] = useState("");
+  const { content_name, content_detail, image } = state;
 
-  const onChange = (e) => {
-    setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
-    console.log(e.target.files[0].name);
+  const inputValue = (name) => (event) => {
+    setState({ ...state, [name]: event.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const submitForm = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const res = await axios.post("http://localhost:3000/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const { fileName, filePath } = res.data;
-      setUploadedFile({ fileName, filePath });
-    } catch (err) {
-      if (err.response.status === 500) {
-        console.log("There was a promblem with the server");
-      } else {
-        console.log(err.response.data.msg);
-      }
-    }
+    console.log(process.env);
   };
+
   return (
     <div className="container">
-      <form encType="multipart/form-data" onSubmit={handleSubmit}>
+      <h1>เขียนบนความ</h1>
+      <form onSubmit={submitForm}>
         <div className="form-group">
-          <label htmlFor="firstname">Upload</label>
-          <input
-            type="file"
-            className="form-control"
-            name="image"
-            // value={e.target.value}
-            required
-            onChange={e=>setImage(e.target.value)}
-          />
-          <label htmlFor="content_name">Content Name</label>
+          <label htmlFor="content_name">ชื่อบทความ</label>
           <input
             type="text"
             className="form-control"
-            name="content_name"
             value={content_name}
-            required
-            onChange={(e) => setContent_name(e.target.value)}
+            onChange={inputValue("content_name")}
           />
-          <label htmlFor="content_detail">Content Detail</label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="content_detail">รายละเอียด</label>
           <textarea
             name="content_detail"
-            className="form-control"
-            id=""
+            className="form-control mb-3"
+            id="content_detail"
             cols="30"
             rows="10"
             value={content_detail}
-            onChange={(e) => setContent_detail(e.target.value)}
+            onChange={inputValue("content_detail")}
           ></textarea>
         </div>
-        <button type="submit" className="btn btn-primary m-3">
-          Submit
-        </button>
-        <button type="reset" className="btn btn-danger">
-          Reset
-        </button>
+        <div className="input-group">
+          <div className="input-group-prepend ">
+            {/* <span className="input-group-text" id="inputGroupFileAddon01">
+              Upload
+            </span> */}
+          </div>
+          <div className="custom-file ">
+            <input
+              type="file"
+              className="custom-file-input form-control"
+              id="inputGroupFile01"
+              aria-describedby="inputGroupFileAddon01"
+              value={image}
+              onChange={inputValue("image")}
+            />
+            {/* <label className="custom-file-label" for="inputGroupFile01">
+              Choose file
+            </label> */}
+          </div>
+        </div>
+        <div className="form-group">
+          <input
+            type="submit"
+            className="btn btn-primary btn-sm mt-3"
+            value="Submit"
+          />
+        </div>
       </form>
     </div>
   );
 };
-
 export default Test;

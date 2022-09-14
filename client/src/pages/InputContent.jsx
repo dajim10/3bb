@@ -4,7 +4,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
 
 // const API_URL = "https://77em4-8080.sse.codesandbox.io";
-const API_URL = "http://localhost:3000"
+const API_URL = "http://localhost:3000";
 const UPLOAD_ENDPOINT = "public";
 
 export default function InputContent({ handleChange, ...props }) {
@@ -67,7 +67,7 @@ export default function InputContent({ handleChange, ...props }) {
               .then((res) => res.json())
               .then((res) => {
                 resolve({
-                  default: `${API_URL}/${res.filename}`,
+                  default: `${API_URL}/${UPLOAD_ENDPOINT}/${res.filename}`,
                 });
               })
               .catch((err) => {
@@ -81,63 +81,76 @@ export default function InputContent({ handleChange, ...props }) {
 
   function handleSubmit(e) {
     const formData = FormData();
-    formData.append('file', e.target.files[0]);
-    formData.append('content_name', content_name);
-    formData.append('content_detail', content_detail);
+    formData.append("file", e.target.files[0]);
+    formData.append("content_name", content_name);
+    formData.append("content_detail", content_detail);
 
     e.preventDefault();
     // alert(e.target.value);
     // setContent_detail(e.target.content_detail)
     // console.log(sdg_id)
-    console.log(file)
+    console.log(file);
 
     axios
       .post("http://localhost:3000/upload", { formData })
       .then((res) => {
-        console.log(res)
+        console.log(res);
       })
       .catch((err) => console.error(err));
   }
 
-  const onClickUpload = async () => {
+  // const onClickUpload = async () => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append("image", file);
+  //   formData.append("content_name", content_name);
+  //   formData.append("content_detail", content_detail);
+  //   // console.log(sdg_number)
+  //   formData.append("sdg_id", sdg_id);
+  //   const uploadImg = await axios({
+  //     method: "post",
+  //     url: "http://localhost:3000/upload",
+  //     data: formData,
+  //   });
+  // };
+
+  const onClickUpload = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", file);
     formData.append("content_name", content_name);
     formData.append("content_detail", content_detail);
-    // console.log(sdg_number)
-    formData.append("sdg_id", sdg_id)
-    const uploadImg = await axios({
+    formData.append("sdg_id", sdg_id);
+    const uploadImage = await axios({
       method: "post",
       url: "http://localhost:3000/upload",
       data: formData,
-    });
+    })
+      .then((res) => console.log(res.data))
+      .catch((error) => console.log(error));
   };
 
   const handleUploadImage = (e) => {
     e.preventDefault();
     const file = e.target.files[0]; // เก็บไว้ setState ลงใน file
-    // alert(file)
+    console.log(file.fieldname);
     const reader = new FileReader(); // เรียก Class FileReader เพื่อแปลง file image ที่รับเข้ามา
     reader.onloadend = () => {
       // เป็น eventของFileReaderเมื่อโหลดภาพเสร็จ
 
       setFile(file); // ทำการ setState
       setImagePreviewUrl(reader.result); //เหมือนด้านบน
-
     };
     reader.readAsDataURL(file); // เป็นส่วนของการแสดงรูป
-    // setFile(file)
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // const uploadImg = axios({
-    //   method: "post",
-    //   url: "http://localhost:3000/public",
-    //   data: formData,
-    // })
+    setFile(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    const uploadImg = axios({
+      method: "post",
+      url: "http://localhost:3000/public",
+      data: formData,
+    });
   };
-
-
 
   function uploadPlugin(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
@@ -149,8 +162,8 @@ export default function InputContent({ handleChange, ...props }) {
       <p className="bg-warning p-2 text-dark text-center rounded-pill shadow">
         Upload Content
       </p>
-      <form encType="multipart/form-data">
-        {/* <form onSubmit={onClickUpload} encType="multipart/form-data"> */}
+      {/* <form encType="multipart/form-data"> */}
+      <form onSubmit={onClickUpload} encType="multipart/form-data">
         <label htmlFor="">หัวข้อ</label>
         <input
           type="text"
@@ -160,9 +173,8 @@ export default function InputContent({ handleChange, ...props }) {
         />
         <img
           src={
-            imagePreviewUrl
-              ? imagePreviewUrl
-              : "https://dcvta86296.i.lithium.com/t5/image/serverpage/image-id/14321i0011CCD2E7F3C8F8/image-size/large?v=1.0&px=999"
+            imagePreviewUrl ? imagePreviewUrl : "null"
+            // : "https://dcvta86296.i.lithium.com/t5/image/serverpage/image-id/14321i0011CCD2E7F3C8F8/image-size/large?v=1.0&px=999"
           }
           style={{ width: "100%", height: "auto" }}
         />{" "}
@@ -174,17 +186,16 @@ export default function InputContent({ handleChange, ...props }) {
           className="form-control mb-2"
           name="file"
           onChange={handleUploadImage}
-        // onChange={e=>setFile(e.target.files[0])}
+          // onChange={e=>setFile(e.target.files[0])}
 
-
-        // onChange={(e) =>
-        //   {
-        //     const fileName= e.target.files[0].name;
-        //     console.log(e.target.files)
-        //     const filePath = e.target.files[0].path;
-        //     setImage(`${fileName}`)
-        //   }}
-        // onChange={(e) => alert(e.target.files[0].name)}
+          // onChange={(e) =>
+          //   {
+          //     const fileName= e.target.files[0].name;
+          //     console.log(e.target.files)
+          //     const filePath = e.target.files[0].path;
+          //     setImage(`${fileName}`)
+          //   }}
+          // onChange={(e) => alert(e.target.files[0].name)}
         />
         {/* <button className="btn btn-outline-primary" onClick={onClickUpload}>
           {" "}
@@ -214,9 +225,9 @@ export default function InputContent({ handleChange, ...props }) {
             },
           }}
           editor={ClassicEditor}
-          onReady={(editor) => { }}
-          onBlur={(event, editor) => { }}
-          onFocus={(event, editor) => { }}
+          onReady={(editor) => {}}
+          onBlur={(event, editor) => {}}
+          onFocus={(event, editor) => {}}
           onChange={(event, editor) => {
             handleChange(editor.getData());
             setContent_detail(editor.getData());
@@ -226,9 +237,9 @@ export default function InputContent({ handleChange, ...props }) {
           {...props}
           name="content_detail"
 
-        // onSubmit={(event, editor) => {
-        //   handleSubmit(editor.getData());
-        // }}
+          // onSubmit={(event, editor) => {
+          //   handleSubmit(editor.getData());
+          // }}
         />
         {/* <div className="form-group form-checkbox"> */}
         {/* {sdg_number} */}
@@ -257,7 +268,7 @@ export default function InputContent({ handleChange, ...props }) {
           <button
             type="submit"
             className="btn btn-primary mt-2 rounded-pill shadow"
-            onClick={onClickUpload}
+            // onClick={onClickUpload}
           >
             Submit
           </button>
