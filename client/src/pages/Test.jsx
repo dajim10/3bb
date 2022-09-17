@@ -19,7 +19,7 @@ const Test = () => {
     // e.preventDefault();
 
     axios
-      .post("http://localhost:3000/upload", { formData })
+      .post("/upload", { formData })
       .then((res) => {
         console.log(res);
       })
@@ -43,7 +43,7 @@ const Test = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/sdgs`, {
+      .get(`/sdgs`, {
         headers: {
           "Access-Control-Allow-Origin": true,
         },

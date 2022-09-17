@@ -133,7 +133,7 @@ export default function InputContent({ handleChange, ...props }) {
   const handleUploadImage = (e) => {
     e.preventDefault();
     const file = e.target.files[0]; // เก็บไว้ setState ลงใน file
-    console.log(file.fieldname);
+    console.log(file);
     const reader = new FileReader(); // เรียก Class FileReader เพื่อแปลง file image ที่รับเข้ามา
     reader.onloadend = () => {
       // เป็น eventของFileReaderเมื่อโหลดภาพเสร็จ
@@ -236,7 +236,7 @@ export default function InputContent({ handleChange, ...props }) {
           }}
           {...props}
           name="content_detail"
-
+          data={content_detail}
           // onSubmit={(event, editor) => {
           //   handleSubmit(editor.getData());
           // }}

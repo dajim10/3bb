@@ -20,6 +20,8 @@ function Home() {
 
   const [searchParam, setSearchParam] = useState();
 
+  
+
   const handleChange = (e) => {
     const input = e.target.value;
     if (input.length > 0) {

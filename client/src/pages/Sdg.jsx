@@ -6,7 +6,7 @@ const Sdg = () => {
 
   useEffect(() =>{
     axios
-      .get("http://172.16.163.89:3000/getAll")
+      .get("http://localhost:3000/getAll")
       .then((response) => console.log(response.data))
       .catch((err) => console.error(err));
   },[])

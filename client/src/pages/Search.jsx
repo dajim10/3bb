@@ -13,7 +13,7 @@ const Search = () => {
         // console.log(search)
         e.preventDefault(e);
         // alert(search)
-        axios.get('http://192.168.1.46:3000/search/'+search)
+        axios.get('/search/'+search)
         .then((response)=>setData(response.data))
         .catch(err=>console.error(err))
         

@@ -7,6 +7,8 @@ const cors = require("cors");
 const path = require("path");
 const mysql = require("mysql2");
 const multiparty = require("multiparty");
+// const { createProxyMiddleware } = require('http-proxy-middleware');
+
 
 app.use(bodyParser.json());
 require("dotenv").config();
@@ -76,12 +78,12 @@ app.post("/addimage", (req, res, body) => {
   });
 });
 
-// app.post('/upload', upload.single('image'), (req, res) => {
+// app.post('/upload', upload.single('file'), (req, res) => {
 //     res.send(file)
 // })
 
 /********* ปิดชั่วคราวเพื่อทดสอบ 13-09-2020  */
-app.post("/upload", upload.array("file"), (req, res) => {
+app.post("/upload", upload.single("file"), (req, res) => {
   console.log(req.body);
   const content_name = req.body.content_name;
   const content_detail = req.body.content_detail;
